@@ -36,7 +36,7 @@ const Header = () => {
             </Link>
           ))}
         </div>
-        <ThemeSwitch />
+        {/* <ThemeSwitch /> */}
         <MobileNav />
       </div>
     </header>
