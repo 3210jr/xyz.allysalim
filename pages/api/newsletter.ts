@@ -7,36 +7,25 @@ import siteMetadata from '@/data/siteMetadata'
 
 // NewsletterAPI.
 
-const headers = {
-  Authorization: `Token ${process.env.BUTTONDOWN_API_KEY}`,
-}
-
 const BASE_URL = 'https://api.buttondown.email'
 const ENDPOINT = '/v1/subscribers'
 
-const data = {
-  email: '',
-  notes: '',
-  metadata: {},
-  tags: [],
-  referrer_url: '',
-  referring_subscriber_id: '',
-  subscriber_type: 'subscriber.created',
-}
-
 // @ts-ignore
 export default async function handler(req, res) {
+  const API_KEY = process.env.BUTTONDOWN_API_KEY
   const { email } = req.body
+  console.log(email, API_KEY)
   const response = await fetch(`${BASE_URL}${ENDPOINT}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      ...headers,
+      Authorization: `Token ${API_KEY}`,
     },
     body: JSON.stringify({
       email,
     }),
   })
+  console.log(response)
   if (response.status >= 400) {
     return res.status(500).json({ error: `There was an error subscribing to the list.` })
   }
