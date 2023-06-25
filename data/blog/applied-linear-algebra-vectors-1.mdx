@@ -3,7 +3,7 @@ title: Applied Linear Algebra - Vectors I
 date: '2023-05-13'
 tags: ['nim','linear algebra','math','science','programming']
 draft: false
-summary: Getting familiar with vectors while introducing the Nim programming language
+summary: An introduction to vectors and vector operation using the Nim programming language
 images: []
 layout: PostLayout
 ---
@@ -12,7 +12,7 @@ layout: PostLayout
 ## About this series of articles
 
 These posts are an introduction to applied linear algebra and the nim programming language.
-The content is heavily based on two books [Introduction to Applied Linear Algebra](https://a.co/d/7qYJWKM) and [Linear Algebra Done Right](https://a.co/d/fW3lECH), both amazing books focusing 
+The content is heavily based on two books [Introduction to Applied Linear Algebra](https://a.co/d/7qYJWKM) and [Linear Algebra Done Right](https://a.co/d/fW3lECH), both amazing books focused 
 on applications and theory respectively.
 
 #### Motivation for the Nim programming language.
@@ -64,7 +64,7 @@ $$
 
 $$
 
-We this notation we can describe, many things such as house features prices, gps locations, colors, changes over time, and many more.
+With this notation we can describe many things such as house features, prices, gps locations, colors, changes over time, and many more.
 
 $$
 \mathbf{coordinates} = \left(\begin{array}
@@ -138,7 +138,7 @@ echo white[1]
 Note that mathematically, you refer to the second element like so: $$white_2$$. More generally $$a_i$$ gets the ith element of the a vector. 
 Also observe that both arrays and sequences store items of the same datatype, you cannot have an array/sequence whose elements mix between types (int vs float vs string vs ...).
 
-You will notice the use of the `const` keyword used to declare the vectors. We use `const` to define things that will never change, or get reassigned later on in the program. 
+You will notice the use of the `const` keyword to declare the vectors. We use `const` to define things that will never change, or get reassigned later on in the program. 
 There 2 other ways of declaring things in nim: 
 `let` and `var`.
 
@@ -150,14 +150,12 @@ let subjects = ["mathematics", "physics", "art", "underwater basket weaving"]
 
 var languages = ["nim", "julia", "python", "javascript", "rust"]
 ```
-A special feature of `const`'s is that they are evaluated when the program is compiled and no extra work is 
-needed during runtime - which can be great for perfomance is some cases. 
-These are great for things that are known 
-before hand. 
+A special feature of `const` is that it is evaluated when the program is compiled and no extra work is 
+needed during runtime - which can be great for perfomance in some cases. 
+These are great for things that are known before hand. 
 
-The `let` definitions also define things that will not change (like const) but not evaluated at compile time - 
-which is great for things that do not change but are not known during development. The 
-last keyword is `var`, used for things that can be reassigned (can change) during the runing of the program.
+Like `const`, we can use `let` to define things that will not change at runtime. Unlike the `const` declaration, `let` definitions are not known ahead of time and thus 
+are not compiled. The last keyword is `var`, used for things that can be reassigned (can change) during the runing of the program.
 
 ```nim
 var languages = ["nim", "julia", "python", "javascript", "rust"]
@@ -406,7 +404,7 @@ echo result
 
 #### Abstraction with Functions
 In mathematics functions are everywhere, and everything can be expressed and described as a function. Without getting more philosophical, 
-lets look at how we can describe things using functions:
+let's look at how we can describe things using functions:
 ```nim
 # Functions can be defined using the `proc` keyword
 # which can be thought of as a procedure
