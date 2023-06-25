@@ -10,6 +10,7 @@ import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import { NewsletterForm } from 'pliny/ui/NewsletterForm'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`
 const discussUrl = (path) =>
@@ -167,6 +168,10 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
           </div>
         </div>
       </article>
+
+      <div className="flex items-center justify-center pt-4">
+        <NewsletterForm />
+      </div>
     </SectionContainer>
   )
 }

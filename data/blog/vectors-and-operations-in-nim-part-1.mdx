@@ -1,0 +1,552 @@
+---
+title: Applied Linear Algebra - Vectors I
+date: '2023-05-13'
+tags: ['nim','linear algebra','math','science','programming']
+draft: false
+summary: Getting familiar with vectors while introducing the Nim programming language
+images: []
+layout: PostLayout
+---
+
+
+## About this series of articles
+
+These posts are an introduction to vectors for those comfortable with the nim programming language, and an introduction to the nim programming language for those who are comfortable witn vectors.
+The content is heavily based on two books [Introduction to Applied Linear Algebra](https://a.co/d/7qYJWKM) and [Linear Algebra Done Right](https://a.co/d/fW3lECH), both amazing books focusing 
+on applications and theory respectively.
+
+#### Motivation
+
+Nim is a great programming language for both general purpose programming and science. Unfortunately, its not very easy to find example or documentation for the language and its features, making
+it difficult for early adopters to piece things together and get the job done. All code examples will be simple, uncluttered, and well documented along with alternatives for how to do things.
+
+This post introduces the basics of the nim programming language and vectors needed for future development.
+
+
+### Prerequisites
+Make sure you have installed nim from instructions here: https://nim-lang.org/install.html . Also install `inim` which is a repl that you can run on your teminal/command line to quickly iterate 
+on your programs here: https://github.com/inim-repl/INim.
+
+If you ever need an environment to try out things without installing anything locally, try the nim playground: https://play.nim-lang.org/.
+
+
+## About vectors
+
+Vectors are a fundamental concept in linear algebra - which itself is a core requirement for doing sience. Vectors are ordered lists of numbers that are often used to describe things through listing out
+their features.
+
+There are various notations for vectors but we will use either square brackets or parentheseis as shown below:
+
+$$
+\left[\begin{array}
+  {c}
+  y_1 \\
+  . \\
+  . \\
+  . \\
+  y_n
+\end{array}\right]
+
+\space
+\space
+\text{or}
+\space
+\space
+
+\left(\begin{array}
+  {c}
+  y_1 \\
+  . \\
+  . \\
+  . \\
+  y_n
+\end{array}\right)
+
+$$
+
+We this notation we can describe, many things such as house features prices, gps locations, colors, changes over time, and many more.
+
+$$
+\mathbf{coordinates} = \left(\begin{array}
+  {c}
+  3.0674 \\
+  37.3556 \\
+\end{array}\right)
+
+\\
+\\
+\text{or}
+\\
+\\
+\space
+\\
+\\
+
+\mathbf{cyan} = \left[\begin{array}
+  {c}
+  0 \\
+  100 \\
+  100 \\
+\end{array}\right]
+$$
+
+Where the first __element__ in the `coordinates` vector represent the latitude and the second represents 
+the longitude; And the __elements__ in the `cyan` vector are the Red, Blue, and Green values respectiely.
+
+Note: Elements can also be referred to as __coefficients__, __entries__, or __components__.
+
+#### Vectors in nim
+We can represent vectors using data structures that are capable of storing lists or sequences of numbers. 
+In nim two great options are either the `array` or the `sequence` data type.
+
+```nim
+# This is an example of a comment. 
+# All comments begin with the '#' symbol and are not excecuted by the computer
+
+# Here we define the coordinates array.
+# After the name of our array, we put a colon and define the type
+# Here we state that the array has a length of 2 and contains 
+# floating point numbers (numbers with decimals)
+const coordinates: array[2, float] = [3.0674, 37.3556]
+
+# The nim compiler is smart, we actually dont need to define the type everytime
+# The compiler is smart enough determine the types from usage and context
+# Here the compiler identifies the array as having the type array[2, float]
+const other_coordinates = [5.0321, 22.943]
+
+# We can print this out to the terminal through the `echo` command:
+echo typeof other_coordinates
+# Output -> array[0..1, float64] == type array[0..1, float64]
+# We can see that the compiler correctly identified the array of float64 items 
+# (we'll talk about float64, float32, and ints in another post)
+
+
+# We can also define sequences. Which are similar to arrays, but with subtle difference
+# This sequence does not have a defined size/length, and will contain integers 
+# (numbers without decimals)
+const cyan: seq[int] = @[0, 100, 100]
+
+# Again we don't need to define the type every time. If the context is clear, 
+# the compiler will know
+const white = @[255, 255, 255]
+
+# We can access an element of a vector using its `index`
+# Here we will print out the 2nd element in the white vector (nim counting starts from 0)
+echo white[1]
+# Output -> 255
+```
+Note that mathematically, you refer to the second element like so: $$white_2$$. More generally $$a_i$$ gets the ith element of the a vector. 
+Also observe that both arrays and sequences store items of the same datatype, you cannot have an array/sequence whose elements mix between types (int vs float vs string vs ...).
+
+You will notice the use of the `const` keyword used to declare the vectors. We use `const` to define things that will never change, or get reassigned later on in the program. 
+There 2 other ways of declaring things in nim: 
+`let` and `var`.
+
+```nim
+# Strings and emojis work just as well 🎉!
+const hobbies = ["swimming", "video games", "launching rockets 🚀"]
+
+let subjects = ["mathematics", "physics", "art", "underwater basket weaving"]
+
+var languages = ["nim", "julia", "python", "javascript", "rust"]
+```
+A special feature of `const`'s is that they are evaluated when the program is compiled and no extra work is 
+needed during runtime - which can be great for perfomance is some cases. 
+These are great for things that are known 
+before hand. 
+
+The `let` definitions also define things that will not change (like const) but not evaluated at compile time - 
+which is great for things that do not change but are not known during development. The 
+last keyword is `var`, used for things that can be reassigned (can change) during the runing of the program.
+
+```nim
+var languages = ["nim", "julia", "python", "javascript", "rust"]
+echo languages # Output -> ["nim", "julia", "python", "javascript", "rust"]
+
+languages = ["english", "french", "swahili", "mandarin", "spanish"]
+echo languages # Output -> ["english", "french", "swahili", "mandarin", "spanish"]
+
+# Note that we cannot reassign languages with another array of a smaller size
+languages = ["english", "french"]
+# 🐞 This will error out becuase arrays need to have a fixed size
+```
+
+```nim
+# To support dynamic sizes, we should use sequences instead of arrays. i.e:
+var languages = @["english", "french", "swahili", "mandarin", "spanish"]
+languages = @["english", "spanish"]
+# No errors here!
+```
+
+Additionally, since array sizes have to be known ahead of time, they can be stored directly on the stack 
+while sequence has to be stored on the heap. Making the array more performant in some cases.
+Learn more about Nim's memory model here: http://zevv.nl/nim-memory/
+
+### Size
+Vectors have a finite size _n_ - cannot contain an infinite number of elements. Many mathematicians can also refer to vectors as n-tuples. 
+Nim also has the `tuple` data structure that _could_ be used for vector operations,
+but we'll save that one for another time.
+
+We can find the size of a vector using the `len` method:
+```nim
+const white = @[255, 255, 255]
+
+# Print out its length
+echo white.len()
+# Output -> 2
+
+# 🔥 Nim also supports Uniform Function Call Syntax
+# Which you can read more about here: https://en.wikipedia.org/wiki/Uniform_Function_Call_Syntax
+# basically means you can also do the following
+echo len(white)
+# Output -> 2
+```
+
+Coming from more mainstrem languages, I thought the Uniform Function Call Syntax was a downside to nim that would lead to confusion. 
+This could not be further from the truth, I found that the syntax allows for very natural 
+expression of intention and flexibility of thought. Also, its not something that can be easily explained, it should be experienced.
+
+Since we are talking about (possibly) wierd things about nim, nim is case insensitive for variable names as long as the first characters match. i.e:
+```nim
+var coordinates = [0, 0, 0]
+
+# Assign the second element the value 1.
+# nim starts counting from 0, like many other languages
+coordinates[1] = 1
+
+# The following will fail because the first characters do not match
+Coordinates[2] = 4
+# 🐞 Error: undeclared identifier: 'Coordinates'
+
+# Works just fine
+# Underscores are also completely ignored!
+coOrDi_nates[0] = 2
+
+echo coordinates
+# Output -> [2, 1, 0]
+```
+
+The last thing I'll say about the case-insensitivity and ignoring of underscores is that it was definitely a 
+strange thing to get used to. However, its suprisingly refreshing in one regard, 
+it forces you to *not* think about the code and syntax. You dont need to worry about the difference between 
+the isEqual function and the is_equal function, because whichever one you use, 
+you are checking whether things are equal.
+
+Learn more here: https://github.com/nim-lang/Nim/wiki/Unofficial-FAQ#why-is-it-caseunderscore-insensitive
+
+### Vector Operations
+In the next few paragraphs, we'll look at the basic operations: addition, subtraction, scalar multiplication, inner (dot) products, and cross product vector operations.
+
+#### Vector Addition
+In vector addition we are simply adding each element of a vector to the element in the other vector at the same position.
+$$
+\left[\begin{array}
+  {c}
+  0 \\
+  7 \\
+\end{array}\right] + \left[\begin{array}
+  {c}
+  1 \\
+  2 \\
+\end{array}\right] = \left[\begin{array}
+  {c}
+  1 \\
+  9 \\
+\end{array}\right]
+$$
+
+```nim
+# Declare our two vectors
+let vec1 = [0, 7]
+let vec2 = [1, 2]
+
+# declare the results array as a variable without a value
+# we can set the size to 2 because we know adding 2 vectors of size 2, produces a vector of size 2
+var result: array[2, int]
+
+# Loop through the first vector
+# We can access the index of each entry, and the entry itself
+for index, entry in vec1:
+  echo index, " : ", entry
+  # At each index of the resuling vector, put the sum of the two entries of each vector
+  result[index] = entry + vec2[index]
+
+echo result
+# Output -> [1, 9]
+```
+
+
+#### Vector Subtraction
+Similar to vector addition, except the operation is now subtraction
+$$
+\left[\begin{array}
+  {c}
+  0 \\
+  7 \\
+\end{array}\right] - \left[\begin{array}
+  {c}
+  1 \\
+  2 \\
+\end{array}\right] = \left[\begin{array}
+  {c}
+  -1 \\
+  5 \\
+\end{array}\right]
+$$
+
+
+```nim
+# Declare our two vectors
+let vec1 = [0, 7]
+let vec2 = [1, 2]
+
+var result: array[2, int]
+for index, entry in vec1:
+  echo index, " : ", entry
+  # The only change between subtraction and addition
+  # is the operation used - subtraction in this case
+  result[index] = entry - vec2[index]
+
+echo result
+# Output -> [-1, 5]
+```
+
+
+#### Scalar Multiplication
+Here we are multiplying a single value (scalar) by a vector. The result is equivalent to multiplying the scalar by each item 
+of the vector - which results in a "scaled" version of the vector, hence the name scalar.
+$$
+\mathbf{(2)}\left[\begin{array}
+  {c}
+  3 \\
+  4 \\
+  44.5 \\
+\end{array}\right] = \left[\begin{array}
+  {c}
+  6 \\
+  8 \\
+  89 \\
+\end{array}\right]
+$$
+
+
+```nim
+# Declare our two vectors
+let scalar = 2.0
+let vec = [3.0, 4.0, 44.5]
+
+# This time our array will be of size 3 and type float
+var result: array[3, float]
+
+# In this case we only have one vector we can loop over. Much easier.
+for index, entry in vec:
+  result[index] = scalar * entry
+
+echo result
+# Output -> [6.0, 8.0, 89.0]
+```
+
+
+#### Inner (Dot) Product
+One way to multiply two vectors with each other is by taking the inner product (also known as the dot product). This includes three steps: 
+1. Transposing one of the vectors
+2. Taking the product of its elements, one by one
+3. Adding the results of the previous product operation
+
+Resulting in *a single* value, which is the inner product of the two vectors.
+
+Given two vectors, a and b, we can find the inner product:
+
+$$
+a^T b = a_1 b_1 + a_2 b_2 + ... + a_n b_n
+$$
+
+which is a scalar (a single number)
+
+$$
+\left[\begin{array}
+  {c}
+  -1 \\
+  2 \\
+  2 \\
+\end{array}\right]^T  \left[\begin{array}
+  {c}
+  1 \\
+  0 \\
+  -3 \\
+\end{array}\right] 
+\\ 
+\space
+\\
+= (-1)(1) + (2)(0) + (2)(-3) = -7 
+$$
+
+We will discuss the `transpose` operation in more detail in the future, but it basically means we convert the column vector into a row vector!
+
+```nim
+# Declare our vectors as usual
+let vec1 = [-1, 2, 2]
+let vec2 = [1, 0, -3]
+
+# Initialize our result variable. Remember the compiler can infer types quite easily.
+var result = 0
+for index, entry in vec1:
+  # Get the product of the entries at each index
+  let prod = entry * vec2[index]
+  # Add the product to the results
+  result += prod
+
+
+# Note: There are other ways to perform list comprehensions in Nim, 
+# we'll cover them in the future.
+
+echo result
+# Output -> -7
+```
+
+#### Abstraction with Functions
+In mathematics functions are everywhere, and everything can be expressed and described as a function. Without getting more philosophical, 
+lets look at how we can describe things using functions:
+```nim
+# Functions can be defined using the `proc` keyword
+# which can be thought of as a procedure
+proc add(one: int, two: int): int =
+  return one + two
+
+# We can also use the `func` keyword
+func subtract(one: int, two: int): int =
+  return one - two
+
+# Nim uses implicit returns, meaning in the absence of a return statement, 
+# the last line is returned as the result
+func product(one: int, two: int): int =
+  one * two
+
+# Nim functions also support overloading, you can define two functions with 
+# the same name, but different properties and the 
+# compiler will know which one you are referring to whenever you use the method.
+func product(one: float, two: float, three: float): float =
+  return one * two * three
+
+# This is especially great when one operation/method can be used for different things.
+```
+
+The key difference between `proc` and `func` is that func's MUST be pure functions that do not have any side effects. i.e: 
+You can `echo` (print) things to the console inside a proc but not inside a func. I like using func whenever I need to 
+communicate that this function is pure, and can often be parallelized safely. The concept of pure functions is very interesting and I encourage everyone to dig deeper to 
+understand how this helps create simpler software.
+
+Learn more: https://en.wikipedia.org/wiki/Pure_function
+
+
+Using functions we can become more declarative by converting the imperative operations we have used before, into reusable operations:
+```nim
+# Because we know we want to support vector addition for vectors  
+# of bot integers, and floats, and maybe other types like Natural numbers, etc,
+# We can tell the compiler "We will pass in something of Type T" - and use the type
+# T as a placeholder for operations I will perform later.
+func add[T](vec1, vec2: T): T =
+  ## Get the sum of two vectors
+  var result: T 
+  for index, entry in vec1:
+    result[index] = entry + vec2[index]
+  return result
+
+echo add([1,2,3], [1,2,3])
+# Output -> [2, 4, 6]
+echo add([1.0,2.0,3.0], [1.0,2.0,3.0])
+# Output -> [2.0, 4.0, 6.0]
+# Both the integers and floats worked becuase we told the complier to figure it out.
+
+func subtract[T](vec1, vec2: T): T =
+  ## Subtract the second vector from the first one
+  var result: T 
+  for index, entry in vec1:
+    result[index] = entry - vec2[index]
+  return result
+
+echo subtract([1,2,3], [1,2,3])
+# Output -> [0, 0, 0]
+
+# We can even have multiple placeholder types like below
+func scalarVectorProduct[T, U](scalar: T, vec: U): U =
+  ## Multiply a vector by a scalar
+  var answer: U
+  for index, entry in vec:
+    answer[index] = scalar * entry 
+  return answer
+
+echo scalarVectorProduct(2, [1,2,3])
+# Output -> [2, 4, 6]
+
+# Here we need a placeholder type and we also need to tell the compiler
+# that the second arguement will be a vector of some sort with elements of that type T.
+# We can now use the `openArray` type which just means I am not sure what type of 
+# vector it is, but it for sure is a vector (seq vs arr).
+func dotProduct[T](vec1, vec2: openArray[T]): T =
+  ## Get the inner product of two vectors
+  var answer: T
+  for index, entry in vec1:
+    let prod = entry * vec2[index]
+    answer += prod
+  return answer
+
+echo dotProduct([1,2,3],[1,2,3])
+# Output -> 14
+```
+Learn more about generics here: https://nim-lang.org/docs/tut2.html#generics
+
+We can also overload the operators that come within nim:
+```nim
+# Here we are simply writing the same add function we have above.
+# BUT we can now define our own operators using the `` syntax.
+# ALSO, we are overloading the default "+" function by giving it new features
+func `+`[T](vec1, vec2: T): T =
+  var result: T
+  for index, entry in vec1:
+    result[index] = entry + vec2[index]
+  return result
+
+# We can now use the `+` operator like so:
+echo [1,2,3] + [1,2,3]
+# Output -> [2, 4, 6]
+
+# We can do the same with the subtraction operator
+func `-`[T](vec1, vec2: T): T =
+  var result: T 
+  for index, entry in vec1:
+    result[index] = entry - vec2[index]
+  return result
+
+echo [1,2,3] - [1,2,3]
+# Output -> [0, 0, 0]
+
+# And the multiplication operator
+func `*`[T, U](scalar: T, vec: U): U =
+  var answer: U
+  for index, entry in vec:
+    answer[index] = scalar * entry 
+  return answer
+
+echo 2 * [1,2,3]
+# Output -> [2, 4, 6]
+
+# We can also define our own new operators like so:
+func `*.`[T](vec1, vec2: openArray[T]): T =
+  var answer: T
+  for index, entry in vec1:
+    let prod = entry * vec2[index]
+    answer += prod
+  return answer
+
+# And use it as we wish
+echo [1,2,3] *. [1,2,3]
+# Output -> 14
+```
+
+
+### Wrapping up
+In this post we have seen how to do the fundamental operations of linear algebra. We have also reviewed some features of the 
+nim programming language which will be used for the rest of the series. In the next post we will look at linear functions while 
+also familiarizing ourselves futher with the nim programming language.
+
