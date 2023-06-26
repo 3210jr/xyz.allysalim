@@ -118,6 +118,10 @@ const other_coordinates = [5.0321, 22.943]
 # We can print this out to the terminal through the `echo` command:
 echo typeof other_coordinates
 # Output -> array[0..1, float64] == type array[0..1, float64]
+# Which means the same thing as array[2, float]
+# You can think of it as saying: There are indexes from 0 to 1 (basically just 0 and 1 in this case)
+# In arrays of length 5 there will be indexes from 0 to 4: array[0..4, float]
+
 # We can see that the compiler correctly identified the array of float64 items 
 # (we'll talk about float64, float32, and ints in another post)
 
@@ -192,20 +196,20 @@ const white = @[255, 255, 255]
 
 # Print out its length
 echo white.len()
-# Output -> 2
+# Output -> 3
 
 # 🔥 Nim also supports Uniform Function Call Syntax
 # Which you can read more about here: https://en.wikipedia.org/wiki/Uniform_Function_Call_Syntax
 # basically means you can also do the following
 echo len(white)
-# Output -> 2
+# Output -> 3
 ```
 
 Coming from more mainstrem languages, I thought the Uniform Function Call Syntax was a downside to nim that would lead to confusion. 
 This could not be further from the truth, I found that the syntax allows for very natural 
 expression of intention and flexibility of thought. Also, its not something that can be easily explained, it should be experienced.
 
-Since we are talking about (possibly) wierd things about nim, nim is case insensitive for variable names as long as the first characters match. i.e:
+Since we are talking about (possibly) weird things about nim, nim is case insensitive for variable names as long as the first characters match. i.e:
 ```nim
 var coordinates = [0, 0, 0]
 
@@ -441,7 +445,7 @@ Learn more: https://en.wikipedia.org/wiki/Pure_function
 Using functions we can become more declarative by converting the imperative operations we have used before, into reusable operations:
 ```nim
 # Because we know we want to support vector addition for vectors  
-# of bot integers, and floats, and maybe other types like Natural numbers, etc,
+# of both integers, and floats, and maybe other types like Natural numbers, etc,
 # We can tell the compiler "We will pass in something of Type T" - and use the type
 # T as a placeholder for operations I will perform later.
 func add[T](vec1, vec2: T): T =
