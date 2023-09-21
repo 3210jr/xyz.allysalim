@@ -13,7 +13,7 @@ export default function Projects() {
             Research & Publications
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            Research efforts I have contributed to. Some of it even good!
+            Research efforts I have contributed to. Some of it is even good!
           </p>
         </div>
         <div className="container py-12">
