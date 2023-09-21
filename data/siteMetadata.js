@@ -6,7 +6,7 @@ const siteMetadata = {
   author: 'Ally Salim',
   headerTitle: 'Ally Salim',
   description:
-    'Personal website of Ally Salim - I write about software engineering, technology, mathematics, innovation, and more.',
+    "I am a scientist and a father, I like to spend my time building technology to help humans, and sometimes I write about what I have built or how to do somthing.",
   language: 'en-us',
   theme: 'dark', // system, dark or light
   siteUrl: 'https://allysalim.xyz',
